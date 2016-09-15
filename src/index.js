@@ -22,7 +22,7 @@ const analyzeLeg = (data, awayGoalsRule) => {
 
   if (team1Score === team2Score) {
     if (team1Away === team2Away || !awayGoalsRule) {
-      winner = false
+      winner = undefined
       reason = awayGoalsRule ? 'FULL_TIE' : 'TIE'
     } else {
       winner = (team1Away > team2Away) ? team1 : team2,
@@ -36,9 +36,34 @@ const analyzeLeg = (data, awayGoalsRule) => {
   return { winner, reason }
 }
 
+const validateData = (data) => {
+  if (!(Array.isArray(data.teams) && data.teams.length === 2))
+    throw new Error("Need to provide info for exactly two teams")
+
+  if (!data.teams.every((team) => typeof team === "string"))
+    throw new Error("Invalid team data")
+
+  if (data.games === undefined ||
+      !Array.isArray(data.games))
+    throw new Error('Missing games info')
+
+  if (data.games.length !== 2)
+    throw new Error('Need to provide info for exactly two games')
+
+  if (!data.games.every( (game) =>
+    (game.hasOwnProperty('home') &&
+     game.hasOwnProperty('away') &&
+     Number.isInteger(game.home) &&
+     Number.isInteger(game.away))
+  ))
+    throw new Error('Invalid games data')
+}
+
 module.exports = (dataParam, optionsParam) => {
     const data = {...defaultData, ...dataParam}
     const options = {...defaultOptions, ...optionsParam}
+
+    validateData(data)
 
     const result = analyzeLeg(parseData(data), options.awayGoalsRule)
 

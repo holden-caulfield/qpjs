@@ -23,7 +23,7 @@ describe('qpjs', () => {
       teams: ['foo', 'bar'],
       games: [{home: 2, away: 1}, {home: 2, away: 1}]
     }
-    const expected = { winner: false, reason: 'FULL_TIE' }
+    const expected = { winner: undefined, reason: 'FULL_TIE' }
     expect(qp(data)).to.deep.equal(expected)
   }),
   it('accepts option to return scalar result', () => {
@@ -51,7 +51,63 @@ describe('qpjs', () => {
       games: [{home: 2, away: 1}, {home: 3, away: 2}]
     }
     const options = { awayGoalsRule: false }
-    const expected = { winner: false, reason: 'TIE' }
+    const expected = { winner: undefined, reason: 'TIE' }
     expect(qp(data, options)).to.deep.equal(expected)
+  }),
+  it('rejects input when no games provided', () => {
+    const data = { teams: ['foo', 'bar'] }
+    expect(() => qp(data)).to.throw("Missing games info")
+  }),
+  it('rejects input when only one game provided', () => {
+    const data = {
+      teams: ['foo', 'bar'],
+      games: [{home: 2, away: 1}]
+    }
+    expect(() => qp(data)).to.throw("Need to provide info for exactly two games")
+  }),
+  it('rejects input when too many games provided', () => {
+    const data = {
+      teams: ['foo', 'bar'],
+      games: [{home: 2, away: 1}, {home: 2, away: 1}, {home: 2, away: 1}]
+    }
+    expect(() => qp(data)).to.throw("Need to provide info for exactly two games")
+  }),
+  it('rejects input when invalid games data provided', () => {
+    const data1 = {
+      teams: ['foo', 'bar'],
+      games: [{home: 2}, {home: 2, away: 1}]
+    }
+    const data2 = {
+      teams: ['foo', 'bar'],
+      games: [{home: 2, away: 1}, {foo: 2, away: 1}]
+    }
+    const data3 = {
+      teams: ['foo', 'bar'],
+      games: [{home: 2, away: 1}, {home: 'Bad', away: 1}]
+    }
+    expect(() => qp(data1)).to.throw("Invalid games data")
+    expect(() => qp(data2)).to.throw("Invalid games data")
+    expect(() => qp(data3)).to.throw("Invalid games data")
+  }),
+  it('rejects input when only one team provided', () => {
+    const data = {
+      teams: ['foo'],
+      games: [{home: 2, away: 1}, {home: 2, away:2}]
+    }
+    expect(() => qp(data)).to.throw("Need to provide info for exactly two teams")
+  }),
+  it('rejects input when too many teams provided', () => {
+    const data = {
+      teams: ['foo', 'bar', 'baz'],
+      games: [{home: 2, away: 1}, {home: 2, away: 1}]
+    }
+    expect(() => qp(data)).to.throw("Need to provide info for exactly two teams")
+  }),
+  it('rejects input when invalid teams data is provided', () => {
+    const data = {
+      teams: ['foo', 3],
+      games: [{home: 2, away: 1}, {home: 2, away: 1}]
+    }
+    expect(() => qp(data)).to.throw("Invalid team data")
   })
 })
