@@ -1,0 +1,21 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+   "rules": {
+     "react/require-extension": 0,
+     "comma-dangle": [2, "never"],
+     "semi": [2, "never"]
+   },
+   "env": {
+     "es6": true
+   },
+   "ecmaFeatures": {
+     "experimentalObjectRestSpread": true
+   },
+   "globals": {
+     "it": true,
+     "describe": true,
+     "afterEach": true,
+     "beforeEach": true
+   }
+}
