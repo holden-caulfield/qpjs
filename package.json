@@ -1,6 +1,6 @@
 {
   "name": "qpjs",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Very silly library to tell who wins on a two-legged knockout series",
   "main": "dist/index.js",
   "scripts": {
