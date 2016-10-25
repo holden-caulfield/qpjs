@@ -124,4 +124,13 @@ describe('qpjs', () => {
     }
     expect(() => qp(data)).to.throw('Invalid team data')
   })
+
+  it('accepts 0 as a valid score', () => {
+    const data = {
+      teams: ['foo', 'bar'],
+      games: [{ home: 0, away: 3 }, { home: 0, away: 2 }]
+    }
+    const options = { fullResult: false }
+    expect(qp(data, options)).to.equal('bar')
+  })
 })

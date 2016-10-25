@@ -56,10 +56,12 @@ const validateData = (data) => {
   }
 
   if (!data.games.every(game =>
-    (game.home &&
-     game.away &&
-     Number.isInteger(game.home) &&
-     Number.isInteger(game.away))
+    (
+      ('home' in game) &&
+      ('away' in game) &&
+      Number.isInteger(game.home) &&
+      Number.isInteger(game.away)
+    )
   )) {
     throw new Error('Invalid games data')
   }
