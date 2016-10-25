@@ -57,8 +57,8 @@ const validateData = (data) => {
 
   if (!data.games.every(game =>
     (
-      {}.hasOwnProperty.call(game, 'home') &&
-      {}.hasOwnProperty.call(game, 'away') &&
+      ('home' in game) &&
+      ('away' in game) &&
       Number.isInteger(game.home) &&
       Number.isInteger(game.away)
     )
